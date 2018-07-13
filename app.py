@@ -8,7 +8,7 @@
 
 
 from flask_script import Manager, Server
-from flask_app import create_app
+from route import create_app
 import os
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -22,5 +22,5 @@ def hello():
 
 if __name__ == '__main__':
     manager.add_command("runserver",
-                        Server(host="0.0.0.0", port=10011, threaded=True))
+                        Server(host="0.0.0.0", port=10011, threaded=True, use_debugger=True))
     manager.run()

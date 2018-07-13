@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker
 from job.models.base import Base
@@ -62,6 +62,12 @@ class DatabaseAgent():
             return query_result.first()
         else:
             return query_result.all()
+
+    #条件范围查询
+    @orm_session_control
+    def get_by_range(self,orm_model=None, session=None,filter_sql={}):
+        query_result = session.query(orm_model).filter_by(text(filter_sql)).all()
+        return query_result
 
     #增加操作
     @orm_session_control
