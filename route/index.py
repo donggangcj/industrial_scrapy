@@ -35,10 +35,12 @@ def get_news():
     with sqlalchemy_session() as session:
         if data:
             print(1)
-            news = session.query(Industrial).filter(Industrial.time >= time).filter_by(**data).order_by("time").all()
+            news = session.query(Industrial).filter(Industrial.time >= time).filter_by(**data["indus"]).order_by("time").limit(10).offset((data["page"])*10)
+            # news = page.items
         else:
             print(2)
-            news = session.query(Industrial).filter(Industrial.time >= time).order_by("time").all()
+            news = session.query(Industrial).filter(Industrial.time >= time).order_by("time").all()#paginate(data["page"],perpage=10, error_out=True)#.offset((data["page"])*10)
+
         for new in news:
             res.append({"id":new.id,"title":new.title,"time":new.time,"url":new.url,"area":new.area,"nature":new.nature})
         return to_json(200, res)
