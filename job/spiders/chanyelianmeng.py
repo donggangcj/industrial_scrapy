@@ -10,7 +10,6 @@
 import re
 import time
 import scrapy
-import requests
 import datetime
 
 from common.dbtools import DatabaseAgent

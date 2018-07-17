@@ -7,7 +7,6 @@
 
 
 from common.dbtools import DatabaseAgent
-import jieba
 
 
 class JobPipeline(object):

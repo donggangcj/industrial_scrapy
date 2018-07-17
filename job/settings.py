@@ -14,6 +14,7 @@ BOT_NAME = 'job'
 SPIDER_MODULES = ['job.spiders']
 NEWSPIDER_MODULE = 'job.spiders'
 
+# COMMANDS_MODULE = 'job.commands'
 
 
 ITEM_PIPELINES = {

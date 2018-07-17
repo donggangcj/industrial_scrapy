@@ -3,7 +3,7 @@
 import re
 
 import scrapy
-import requests
+# import requests
 import json
 
 from common.dbtools import DatabaseAgent

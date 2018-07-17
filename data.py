@@ -6,11 +6,15 @@
 @File    : job_run.py
 '''
 
-import os
-import sys
-from scrapy.cmdline import execute
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-# execute(['scrapy', 'crawl', 'zhilian_python', '-o', './export/items.json'])
-# execute(['scrapy', 'crawl', 'shanghai'])
-execute(['scrapy', 'crawl', 'anhui'])
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
+
+process = CrawlerProcess(get_project_settings())
+process.crawl('shanghai')
+process.crawl('anhui')
+process.crawl('jiangsu')
+process.crawl('chanyelianmeng')
+process.crawl('zhejiang')
+
+process.start()
