@@ -8,7 +8,7 @@ ENV PYTHONPATH=/home/app MYSQL_HOST="10.8.1.159" \
     MYSQL_DBNAME="jobsystem" MYSQL_USER="root" \
     MYSQL_PASSWD="1234" MYSQL_PORT="3306"
 
-EXPOSE 9001
+EXPOSE 10011
 
 COPY . /home/app/
 
