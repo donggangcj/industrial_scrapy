@@ -77,7 +77,7 @@ class shanghai(scrapy.Spider):
         s['nature'] = response.xpath('//meta[@name="ColumnKeywords"]/@content').extract()[0]
         s['area'] = self.area
         s['origin'] = self.origin
-        
+
         try:
             db_agent.add(
                 kwargs=dict(s),
