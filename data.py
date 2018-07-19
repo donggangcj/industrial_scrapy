@@ -15,5 +15,6 @@ process.crawl('anhui')
 process.crawl('jiangsu')
 process.crawl('chanyelianmeng')
 process.crawl('zhejiang')
+process.crawl('gongxinbu')
 
 process.start()
