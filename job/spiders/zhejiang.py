@@ -7,7 +7,7 @@
 '''
 
 
-import re
+import logging
 import time
 import scrapy
 import requests
@@ -38,9 +38,7 @@ class shanghai(scrapy.Spider):
             p = int(page+1)
         else:
             p = int(page)
-        print(p)
         for x in range(1,p+1):
-            print(x)
             yield scrapy.Request(
                 dont_filter=True,
                 url=self.url.format(p=x),
@@ -58,7 +56,7 @@ class shanghai(scrapy.Spider):
                 filter_kwargs={"url": 'http://www.zjjxw.gov.cn/'+url}
             )
             if url_exits:
-                print("-----------already exits------------")
+                logging.info("-----------already exits------------")
                 continue
             yield scrapy.Request(
                 url='http://www.zjjxw.gov.cn/'+url,
@@ -83,9 +81,9 @@ class shanghai(scrapy.Spider):
                 kwargs=dict(s),
                 orm_model=Industrial
             )
-            print("-----------add success------------")
+            logging.info("-----------add success------------")
         except:
-            print("-----------add error------------")
+            logging.info("-----------add error------------")
             pass
         yield s
 

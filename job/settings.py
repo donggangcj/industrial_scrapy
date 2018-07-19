@@ -14,6 +14,14 @@ BOT_NAME = 'job'
 SPIDER_MODULES = ['job.spiders']
 NEWSPIDER_MODULE = 'job.spiders'
 
+# 同时使用图片和文件Pipeline
+ITEM_PIPELINES={
+    'scrapy.pipelines.images.ImagesPipeline': 1,
+    'scrapy.pipelines.files.FilesPipeline': 2,
+}
+
+FILES_STORE = './path/to/valid/dir'
+
 # COMMANDS_MODULE = 'job.commands'
 
 

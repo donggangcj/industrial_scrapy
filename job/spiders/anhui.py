@@ -11,6 +11,7 @@ import re
 import time
 import scrapy
 import datetime
+import logging
 
 from common.dbtools import DatabaseAgent
 from job.items import IndustrialItem
@@ -54,7 +55,7 @@ class shanghai(scrapy.Spider):
                 filter_kwargs={"url": url}
             )
             if url_exits:
-                print("-----------already exits------------")
+                logging.info("-----------already exits------------")
                 continue
             yield scrapy.Request(
                 url=url,
@@ -81,9 +82,9 @@ class shanghai(scrapy.Spider):
                 kwargs=dict(s),
                 orm_model=Industrial
             )
-            print("-----------add success------------")
+            logging.info("-----------add success------------")
         except:
-            print("-----------add error------------")
+            logging.info("-----------add error------------")
             pass
         yield s
 

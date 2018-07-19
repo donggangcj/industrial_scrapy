@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import re
-
+import logging
 import scrapy
 import datetime
 import time
@@ -52,7 +51,7 @@ class jiangsu(scrapy.Spider):
                 filter_kwargs={"url": url}
             )
             if url_exits:
-                print("-----------already exits------------")
+                logging.info("-----------already exits------------")
                 continue
             yield scrapy.Request(
                 url=url,
@@ -77,8 +76,8 @@ class jiangsu(scrapy.Spider):
                 kwargs=dict(s),
                 orm_model=Industrial
             )
-            print("-----------add success------------")
+            logging.info("-----------add success------------")
         except:
-            print("-----------add error------------")
+            logging.info("-----------add error------------")
             pass
         yield s

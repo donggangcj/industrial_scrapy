@@ -7,7 +7,7 @@
 '''
 
 
-import re
+import logging
 import time
 import scrapy
 import datetime
@@ -54,7 +54,7 @@ class shanghai(scrapy.Spider):
                 filter_kwargs={"url": url}
             )
             if url_exits:
-                print("-----------already exits------------")
+                logging.info("-----------already exits------------")
                 continue
             date = response.xpath('//a[@href="{url}"]/div/text()'.format(url=url)).extract()[0]
             date = date.replace(' ', '')
@@ -70,9 +70,9 @@ class shanghai(scrapy.Spider):
                     kwargs=dict(s),
                     orm_model=Industrial
                 )
-                print("-----------add success------------")
+                logging.info("-----------add success------------")
             except:
-                print("-----------add error------------")
+                logging.info("-----------add error------------")
                 pass
             yield s
 

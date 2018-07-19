@@ -14,6 +14,7 @@ import time
 import scrapy
 import requests
 import datetime
+import logging
 
 from common.dbtools import DatabaseAgent
 from job.items import IndustrialItem
@@ -57,7 +58,7 @@ class shanghai(scrapy.Spider):
                 filter_kwargs={"url": url}
             )
             if url_exits:
-                print("-----------already exits------------")
+                logging.info("-----------already exits------------")
                 continue
             yield scrapy.Request(
                 url=url,
@@ -77,15 +78,15 @@ class shanghai(scrapy.Spider):
         s['nature'] = response.xpath('//meta[@name="ColumnKeywords"]/@content').extract()[0]
         s['area'] = self.area
         s['origin'] = self.origin
-
+        s['file_urls'] = response.xpath('//ul[@class="view_list clearfix"]')#TODO
         try:
             db_agent.add(
                 kwargs=dict(s),
                 orm_model=Industrial
             )
-            print("-----------add success------------")
+            logging.info("-----------add success------------")
         except:
-            print("-----------add error------------")
+            logging.info("-----------add error------------")
             pass
         yield s
 
