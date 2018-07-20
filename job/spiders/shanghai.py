@@ -79,16 +79,15 @@ class shanghai(scrapy.Spider):
         s['area'] = self.area
         s['origin'] = self.origin
         # s['file_urls'] = response.xpath('//ul[@class="view_list clearfix"]')#TODO
-        print(s)
-        # try:
-        #     db_agent.add(
-        #         kwargs=dict(s),
-        #         orm_model=Industrial
-        #     )
-        #     logging.info("-----------add success------------")
-        # except:
-        #     logging.info("-----------add error------------")
-        #     pass
-        # yield s
+        try:
+            db_agent.add(
+                kwargs=dict(s),
+                orm_model=Industrial
+            )
+            logging.info("-----------add success------------")
+        except:
+            logging.info("-----------add error------------")
+            pass
+        yield s
 
 
