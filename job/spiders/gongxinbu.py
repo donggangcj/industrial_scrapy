@@ -75,7 +75,11 @@ class jiangsu(scrapy.Spider):
             date = datetime.datetime.strptime(item["showTime"], "%Y-%m-%d")
             s['time'] = time.mktime(date.timetuple())
             s['origin'] = self.origin
-            s['nature'] = None
+            s['nature'] = "None"
+            db_agent.add(
+                kwargs=dict(s),
+                orm_model=Industrial
+            )
             try:
                 db_agent.add(
                     kwargs=dict(s),
