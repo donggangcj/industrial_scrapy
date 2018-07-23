@@ -3,7 +3,6 @@
 
 import re
 import logging
-from flask import jsonify
 from .dbtools import DatabaseAgent
 from job.models.industrial import Industrial
 
