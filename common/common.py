@@ -1,10 +1,12 @@
 # _*_coding:utf-8_*_
 
 
+import re
+import logging
 from flask import jsonify
 from .dbtools import DatabaseAgent
-import jieba
-import re
+from job.models.industrial import Industrial
+
 
 MSG_MAP = {
     200: 'success',
@@ -21,6 +23,27 @@ MSG_MAP = {
     10000: '目录名已存在',
     10001: '文件传输错误'
 }
+
+
+#信息是否已经存在
+def is_exits(title,url):
+    db_agent = DatabaseAgent()
+    url_exits = db_agent.get(
+        orm_model=Industrial,
+        filter_kwargs={"url": url}
+    )
+    if url_exits:
+        logging.info("-----------already exits------------")
+        return False
+    title_exits = db_agent.get(
+        orm_model=Industrial,
+        filter_kwargs={"title": title}
+    )
+    if title_exits:
+        logging.info("-----------already exits------------")
+        return False
+    return True
+
 
 # 过滤html标签
 def filter_tags(htmlstr):
@@ -143,45 +166,3 @@ def to_json(code, data=None):
         "data": data
     })
 
-
-# 过滤垃圾字符
-# def clear(data):
-#     return data.strip().replace('\n', '').replace('\t', '').replace('\r', '').replace(',', '').replace('.',
-#                                                                                                        '').replace(
-#         '!', '').replace('，', '').replace('。', '').replace('！', '').replace('、', '').replace(':', '').replace('：',
-#                                                                                                               '').replace(
-#         ' ', '').replace('"', '').replace('\'', '').replace('“', '').replace('”', '').replace('；', '').replace('(',
-#                                                                                                                '').replace(
-#         ')', '')
-
-# 数字文字分词存储
-def parse_word(description, word_model):
-    db_agent = DatabaseAgent()
-    seg_list = jieba.cut(description)
-    for x in seg_list:
-        if x == " ":
-            continue
-        exists = db_agent.get(
-            filter_kwargs={
-                "word": str(x)
-            },
-            orm_model=word_model
-        )
-        if exists:
-            db_agent.update(
-                filter_kwargs={
-                    "word": str(x)
-                },
-                method_kwargs={
-                    "count": 1 + exists.count
-                },
-                orm_model=word_model
-            )
-        else:
-            db_agent.add(
-                kwargs={
-                    "word": str(x),
-                    "count": 1
-                },
-                orm_model=word_model
-            )
