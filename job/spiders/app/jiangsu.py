@@ -11,17 +11,17 @@ from job.models.industrial import Industrial
 
 
 class jiangsu(scrapy.Spider):
-    name = 'jiangsu'
+    name = 'jiangsuapp'
     header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
                             '3.0.3239.132 Safari/537.36'}
     area = 'jiangsu'
     origin = "jiangsu"
-    key = '工业互联网'
+    key = "工业App"
 
     def start_requests(self):
         yield scrapy.Request(
-            url='http://www.jiangsu.gov.cn/jrobot/search.do?webid=23&analyzeType=1&pg=10&p={p}&tpl=2&category=&q=%E5%B7%A5%E4%B8%9A%E4%BA%92%E8%81%94%E7%BD%91&pos=&od=&date=&date='.format(
+            url='http://www.jiangsu.gov.cn/jrobot/search.do?webid=23&analyzeType=1&pg=10&p={p}&tpl=2&category=&q=%E5%B7%A5%E4%B8%9AApp&pos=&od=&date=&date='.format(
                 p=1),
             headers=self.header,
             callback=self.get_page
@@ -36,7 +36,7 @@ class jiangsu(scrapy.Spider):
             p = int(page)
         for x in range(1, p + 1):
             yield scrapy.Request(
-                url='http://www.jiangsu.gov.cn/jrobot/search.do?webid=23&analyzeType=1&pg=10&p={p}&tpl=2&category=&q=%E5%B7%A5%E4%B8%9A%E4%BA%92%E8%81%94%E7%BD%91&pos=&od=&date=&date='.format(
+                url='http://www.jiangsu.gov.cn/jrobot/search.do?webid=23&analyzeType=1&pg=10&p={p}&tpl=2&category=&q=%E5%B7%A5%E4%B8%9AApp&pos=&od=&date=&date='.format(
                     p=x),
                 headers=self.header,
                 callback=self.get_url

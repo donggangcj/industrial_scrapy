@@ -31,3 +31,4 @@ class IndustrialItem(scrapy.Item):
     nature = scrapy.Field()
     time = scrapy.Field()
     # file_urls = scrapy.Field()
+    key = scrapy.Field()

@@ -19,19 +19,19 @@ from job.models.industrial import Industrial
 
 
 class jiangsu(scrapy.Spider):
-    name = 'gongxinbu'
+    name = 'gongxinbuapp'
     header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
                             '3.0.3239.132 Safari/537.36'}
     area = 'gongxinbu'
     origin = "gongxinbu"
-    key = '工业互联网'
+    key = "工业App"
 
     def start_requests(self):
         yield scrapy.FormRequest(
             url="http://searchweb.miit.gov.cn/search/search",
             headers=self.header,
-            formdata={"urls":"http://www.miit.gov.cn/","sortKey":"showTime","sortFlag":"-1","sortType":"1","indexDB":"css","pageSize":"10","pageNow":"1","name":"工业互联网","num":"10","rangeKey":"showTime"},
+            formdata={"urls":"http://www.miit.gov.cn/","sortKey":"showTime","sortFlag":"-1","sortType":"1","indexDB":"css","pageSize":"10","pageNow":"1","name":"工业App","num":"10","rangeKey":"showTime"},
             callback=self.get_page
         )
 
@@ -44,7 +44,7 @@ class jiangsu(scrapy.Spider):
                 url="http://searchweb.miit.gov.cn/search/search",
                 headers=self.header,
                 formdata={"urls": "http://www.miit.gov.cn/", "sortKey": "showTime", "sortFlag": "-1", "sortType": "1",
-                          "indexDB": "css", "pageSize": "10", "pageNow": str(p), "name": "工业互联网", "num": "10",
+                          "indexDB": "css", "pageSize": "10", "pageNow": str(p), "name": "工业App", "num": "10",
                           "rangeKey": "showTime"},
                 callback=self.get_url
             )

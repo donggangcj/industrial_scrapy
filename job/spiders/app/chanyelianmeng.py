@@ -18,18 +18,18 @@ from job.models.industrial import Industrial
 
 
 class shanghai(scrapy.Spider):
-    name = 'chanyelianmeng'
+    name = 'chanyelianmengapp'
     header = {'Cache-Control': 'max-age=0','Upgrade-Insecure-Requests': '1','User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36','Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8','Referer': 'http://www.sheitc.gov.cn/zxgkxx/index.htm','Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8','Cookie': '_sheitc=jinasgKzas; _gscu_1260451812=302449692ovey868; _gscbrs_1260451812=1; gwideal_date=day; gwdshare_firstime=1530244999495; JSESSIONID=D383BDE1FE6128262786C9E91058B1D2; _gscs_1260451812=t30258567798d7510|pv:12'}
     area = "chanyelianmeng"
     origin = "chanyelianmeng"
     url = 'http://www.aii-alliance.org/index.php?m=content&c=search&a=search&page={p}'
-    key = '工业互联网'
+    key = "工业App"
 
     def start_requests(self):
         yield scrapy.FormRequest(
             url=self.url.format(p="1"),
             headers=self.header,
-            formdata={"search": "工业互联网"},
+            formdata={"search": "工业App"},
             callback=self.get_page
         )
 

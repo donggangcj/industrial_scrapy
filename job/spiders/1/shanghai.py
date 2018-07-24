@@ -26,6 +26,7 @@ class shanghai(scrapy.Spider):
     header = {'Cache-Control': 'max-age=0','Origin': 'http://www.sheitc.gov.cn','Upgrade-Insecure-Requests': '1','User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36','Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8','Referer': 'http://www.sheitc.gov.cn/zxgkxx/index.htm','Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8','Cookie': '_sheitc=jinasgKzas; _gscu_1260451812=302449692ovey868; _gscbrs_1260451812=1; gwideal_date=day; gwdshare_firstime=1530244999495; JSESSIONID=D383BDE1FE6128262786C9E91058B1D2; _gscs_1260451812=t30258567798d7510|pv:12'}
     area = "shanghai"
     origin = "shanghaijingjihexinxihuaweiyuanhui"
+    key = '工业互联网'
 
     def start_requests(self):
         url = 'http://www.sheitc.gov.cn/zxgkxx/index_{p}.htm'
@@ -78,6 +79,7 @@ class shanghai(scrapy.Spider):
         s['nature'] = response.xpath('//meta[@name="ColumnKeywords"]/@content').extract()[0]
         s['area'] = self.area
         s['origin'] = self.origin
+        s['key'] = self.key
         # s['file_urls'] = response.xpath('//ul[@class="view_list clearfix"]')#TODO
         try:
             db_agent.add(
