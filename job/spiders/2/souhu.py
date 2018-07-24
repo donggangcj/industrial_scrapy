@@ -58,7 +58,7 @@ class jiangsu(scrapy.Spider):
                 except:
                     logging.info("-----------add error------------")
                     pass
-                yield s
+                # yield s
 
     def get_time(self,url):
         res = requests.get(
