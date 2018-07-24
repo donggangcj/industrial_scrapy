@@ -21,12 +21,12 @@ from job.models.industrial import Industrial
 
 
 class jiangsu(scrapy.Spider):
-    name = 'souhu'
+    name = 'souhuapp'
     header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
                             '3.0.3239.132 Safari/537.36'}
     area = 'souhu'
-    key = '工业互联网'
+    key = '工业App'
 
     def start_requests(self):
         s = IndustrialItem()
@@ -35,7 +35,7 @@ class jiangsu(scrapy.Spider):
             res = requests.post(
                 url="http://search.sohu.com/outer/search/news",
                 headers=self.header,
-                data={"keyword":"工业互联网","size":"10","from":str(x),"city":"上海市","SUV":"1802211642505755","terminalType":"pc","source":"direct","queryType":"edit"}
+                data={"keyword":"工业互App","size":"10","from":str(x),"city":"上海市","SUV":"1802211642505755","terminalType":"pc","source":"direct","queryType":"edit"}
             )
             res = json.loads(res.content.decode("utf8"))
             if res.get("data",None) == None:
