@@ -44,6 +44,9 @@ class jiangsu(scrapy.Spider):
                 if not is_exits(new["title"],new["url"]):
                     continue
                 s["title"] = new["title"]
+                if "工业" not in s['title'] and "App" not in s['title'] and "APP" not in s['title'] and "app" not in s[
+                    'title']:
+                    continue
                 s["url"] = new["url"]
                 s["area"] = self.area
                 s["origin"] = new["authorName"]

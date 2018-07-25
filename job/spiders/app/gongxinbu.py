@@ -70,26 +70,31 @@ class jiangsu(scrapy.Spider):
             if title_exits:
                 logging.info("-----------already exits------------")
                 continue
-            s["url"] = item["url"]
+
             s['title'] = title
-            s['area'] = self.area
-            date = datetime.datetime.strptime(item["showTime"], "%Y-%m-%d")
-            s['time'] = time.mktime(date.timetuple())
-            s['origin'] = self.origin
-            s['nature'] = "None"
-            s['key'] = self.key
-            db_agent.add(
-                kwargs=dict(s),
-                orm_model=Industrial
-            )
-            try:
+            if "工业" not in s['title'] and "App" not in s['title'] and "APP" not in s['title'] and "app" not in s[
+                'title']:
+                yield s
+            else:
+                s["url"] = item["url"]
+                s['area'] = self.area
+                date = datetime.datetime.strptime(item["showTime"], "%Y-%m-%d")
+                s['time'] = time.mktime(date.timetuple())
+                s['origin'] = self.origin
+                s['nature'] = "None"
+                s['key'] = self.key
                 db_agent.add(
                     kwargs=dict(s),
                     orm_model=Industrial
                 )
-                logging.info("-----------add success------------")
-            except:
-                logging.info("-----------add error------------")
-                pass
-            yield s
+                try:
+                    db_agent.add(
+                        kwargs=dict(s),
+                        orm_model=Industrial
+                    )
+                    logging.info("-----------add success------------")
+                except:
+                    logging.info("-----------add error------------")
+                    pass
+                yield s
 

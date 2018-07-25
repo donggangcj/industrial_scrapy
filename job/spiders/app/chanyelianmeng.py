@@ -61,22 +61,26 @@ class shanghai(scrapy.Spider):
             date = date.replace(' ', '')
             date = datetime.datetime.strptime(date, "%Y.%m.%d")
             s['title'] = response.xpath('//a[@href="{url}"]/h2/text()'.format(url=url)).extract()[0]
-            s['time'] = time.mktime(date.timetuple())
-            s['nature'] = "None"
-            s['area'] = self.area
-            s['origin'] = self.origin
-            s['url'] = url
-            s['key'] = self.key
-            try:
-                db_agent.add(
-                    kwargs=dict(s),
-                    orm_model=Industrial
-                )
-                logging.info("-----------add success------------")
-            except:
-                logging.info("-----------add error------------")
-                pass
-            yield s
+            if "工业" not in s['title'] and "App" not in s['title'] and "APP" not in s['title'] and "app" not in s[
+                'title']:
+                yield s
+            else:
+                s['time'] = time.mktime(date.timetuple())
+                s['nature'] = "None"
+                s['area'] = self.area
+                s['origin'] = self.origin
+                s['url'] = url
+                s['key'] = self.key
+                try:
+                    db_agent.add(
+                        kwargs=dict(s),
+                        orm_model=Industrial
+                    )
+                    logging.info("-----------add success------------")
+                except:
+                    logging.info("-----------add error------------")
+                    pass
+                yield s
 
 
 

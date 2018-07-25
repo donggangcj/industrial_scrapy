@@ -6,23 +6,28 @@
 @File    : job_run.py
 '''
 
+import os
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
+KEY = os.getenv("KEY", None)
+
 process = CrawlerProcess(get_project_settings())
-process.crawl('shanghai')
-process.crawl('anhui')
-process.crawl('jiangsu')
-process.crawl('chanyelianmeng')
-process.crawl('zhejiang')
-process.crawl('gongxinbu')
-process.crawl('souhu')
-# process.crawl('shanghaiapp')
-# process.crawl('anhuiapp')
-# process.crawl('jiangsuapp')
-# process.crawl('chanyelianmengapp')
-# process.crawl('zhejiangapp')
-# process.crawl('gongxinbuapp')
-# process.crawl('souhuapp')
+if KEY == None:
+    process.crawl('shanghai')
+    process.crawl('anhui')
+    process.crawl('jiangsu')
+    process.crawl('chanyelianmeng')
+    process.crawl('zhejiang')
+    process.crawl('gongxinbu')
+    process.crawl('souhu')
+if KEY == "app":
+    process.crawl('shanghaiapp')
+    process.crawl('anhuiapp')
+    process.crawl('jiangsuapp')
+    process.crawl('chanyelianmengapp')
+    process.crawl('zhejiangapp')
+    process.crawl('gongxinbuapp')
+    process.crawl('souhuapp')
 
 process.start()

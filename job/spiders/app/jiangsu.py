@@ -64,22 +64,26 @@ class jiangsu(scrapy.Spider):
         db_agent = DatabaseAgent()
         s = IndustrialItem()
         # s['data'] = response.body.decode("utf-8")
-        s['url'] = response.url
         s['title'] = response.xpath('//title/text()').extract()[0]
-        s['time'] = response.xpath('//meta[@name="PubDate"]/@content').extract()[0]
-        date = datetime.datetime.strptime(s['time'], "%Y-%m-%d %H:%M")
-        s['time'] = time.mktime(date.timetuple())
-        s['nature'] = "None"
-        s['area'] = self.area
-        s['origin'] = self.origin
-        s['key'] = self.key
-        try:
-            db_agent.add(
-                kwargs=dict(s),
-                orm_model=Industrial
-            )
-            logging.info("-----------add success------------")
-        except:
-            logging.info("-----------add error------------")
-            pass
-        yield s
+        if "工业" not in s['title'] and "App" not in s['title'] and "APP" not in s['title'] and "app" not in s[
+            'title']:
+            yield s
+        else:
+            s['url'] = response.url
+            s['time'] = response.xpath('//meta[@name="PubDate"]/@content').extract()[0]
+            date = datetime.datetime.strptime(s['time'], "%Y-%m-%d %H:%M")
+            s['time'] = time.mktime(date.timetuple())
+            s['nature'] = "None"
+            s['area'] = self.area
+            s['origin'] = self.origin
+            s['key'] = self.key
+            try:
+                db_agent.add(
+                    kwargs=dict(s),
+                    orm_model=Industrial
+                )
+                logging.info("-----------add success------------")
+            except:
+                logging.info("-----------add error------------")
+                pass
+            yield s

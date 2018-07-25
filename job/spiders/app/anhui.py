@@ -30,7 +30,7 @@ class shanghai(scrapy.Spider):
         yield scrapy.FormRequest(
             url=self.url,
             headers=self.header,
-            formdata={"keyValue": "工业App".encode("GB2312"),"keyName":"strMasTitle"},
+            formdata={"keyValue": "工业App".encode("GB2312"),"keyName":"strTxtCnt"},
             callback=self.get_page
         )
 
@@ -70,24 +70,27 @@ class shanghai(scrapy.Spider):
         # s['data'] = response.body.decode("GBK").encode("utf8")
         s['url'] = response.url
         s['title'] = response.xpath('//title/text()').extract()[0]
-        s['time'] = response.xpath('//h5/text()').extract()[0]
-        pattern = re.compile(r'.*(\d\d\d\d-\d\d-\d\d)')
-        s['time'] = pattern.match(s['time']).group(1)
-        date = datetime.datetime.strptime(s['time'], "%Y-%m-%d")
-        s['time'] = time.mktime(date.timetuple())
-        s['nature'] = response.xpath('//span[@class="where"]/a[last()]/text()').extract()[0]
-        s['area'] = self.area
-        s['origin'] = self.origin
-        s['key'] = self.key
-        try:
-            db_agent.add(
-                kwargs=dict(s),
-                orm_model=Industrial
-            )
-            logging.info("-----------add success------------")
-        except:
-            logging.info("-----------add error------------")
-            pass
-        yield s
+        if "工业" not in s['title'] and "App" not in s['title'] and "APP" not in s['title'] and "app" not in s['title']:
+            yield s
+        else:
+            s['time'] = response.xpath('//h5/text()').extract()[0]
+            pattern = re.compile(r'.*(\d\d\d\d-\d\d-\d\d)')
+            s['time'] = pattern.match(s['time']).group(1)
+            date = datetime.datetime.strptime(s['time'], "%Y-%m-%d")
+            s['time'] = time.mktime(date.timetuple())
+            s['nature'] = response.xpath('//span[@class="where"]/a[last()]/text()').extract()[0]
+            s['area'] = self.area
+            s['origin'] = self.origin
+            s['key'] = self.key
+            try:
+                db_agent.add(
+                    kwargs=dict(s),
+                    orm_model=Industrial
+                )
+                logging.info("-----------add success------------")
+            except:
+                logging.info("-----------add error------------")
+                pass
+            yield s
 
 
