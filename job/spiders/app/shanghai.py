@@ -83,7 +83,7 @@ class shanghai(scrapy.Spider):
             s['nature'] = response.xpath('//meta[@name="ColumnKeywords"]/@content').extract()[0]
             s['area'] = self.area
             s['origin'] = self.origin
-            s['key'] = self.key
+            s['keyword'] = self.key
             # s['file_urls'] = response.xpath('//ul[@class="view_list clearfix"]')#TODO
             try:
                 db_agent.add(

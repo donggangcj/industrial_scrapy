@@ -15,6 +15,6 @@ class Industrial(Base):
     nature = Column(String(255))
     origin = Column(String(255))
     time = Column(Integer,default=time.time())
-    key = Column(String(255))
+    keyword = Column(String(255))
     # data = Column(Text)
 

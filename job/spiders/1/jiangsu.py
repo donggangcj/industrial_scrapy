@@ -72,7 +72,7 @@ class jiangsu(scrapy.Spider):
         s['nature'] = "None"
         s['area'] = self.area
         s['origin'] = self.origin
-        s['key'] = self.key
+        s['keyword'] = self.key
         try:
             db_agent.add(
                 kwargs=dict(s),

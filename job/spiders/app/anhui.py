@@ -81,7 +81,7 @@ class shanghai(scrapy.Spider):
             s['nature'] = response.xpath('//span[@class="where"]/a[last()]/text()').extract()[0]
             s['area'] = self.area
             s['origin'] = self.origin
-            s['key'] = self.key
+            s['keyword'] = self.key
             try:
                 db_agent.add(
                     kwargs=dict(s),

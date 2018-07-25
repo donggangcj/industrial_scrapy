@@ -52,7 +52,7 @@ class jiangsu(scrapy.Spider):
                 s["origin"] = new["authorName"]
                 s["nature"] = None
                 s["time"] = self.get_time(new["url"])
-                s['key'] = self.key
+                s['keyword'] = self.key
                 print(s)
                 try:
                     db_agent.add(

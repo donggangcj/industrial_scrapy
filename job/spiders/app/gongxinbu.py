@@ -82,7 +82,7 @@ class jiangsu(scrapy.Spider):
                 s['time'] = time.mktime(date.timetuple())
                 s['origin'] = self.origin
                 s['nature'] = "None"
-                s['key'] = self.key
+                s['keyword'] = self.key
                 db_agent.add(
                     kwargs=dict(s),
                     orm_model=Industrial
