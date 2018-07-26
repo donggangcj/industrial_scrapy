@@ -8,6 +8,7 @@
 
 
 import logging
+import requests
 import time
 import scrapy
 import datetime
@@ -48,7 +49,6 @@ class shanghai(scrapy.Spider):
         s = IndustrialItem()
         db_agent = DatabaseAgent()
         urls = response.xpath('//ul[@class="download_list"]/li/a/@href').extract()
-        print(urls)
         for url in urls:
             url_exits = db_agent.get(
                 orm_model=Industrial,
@@ -68,14 +68,29 @@ class shanghai(scrapy.Spider):
             s['url'] = url
             s['keyword'] = self.key
             try:
+                res = True
                 db_agent.add(
                     kwargs=dict(s),
                     orm_model=Industrial
                 )
                 logging.info("-----------add success------------")
-            except:
+            except Exception as e:
+                res = False
+                logging.info(e)
                 logging.info("-----------add error------------")
                 pass
+            #
+            # data = scrapy.Request(
+            #     url=url,
+            #     headers=self.header
+            # )
+            # print(data)
+            # data
+            # res = True
+            # if res:
+            #     with open('./export/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
+            #         f.write(str(data))
+            #     yield s
             yield s
 
 

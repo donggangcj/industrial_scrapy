@@ -16,6 +16,7 @@ import logging
 from common.dbtools import DatabaseAgent
 from job.items import IndustrialItem
 from job.models.industrial import Industrial
+from common.common import clear
 
 
 class shanghai(scrapy.Spider):
@@ -67,7 +68,6 @@ class shanghai(scrapy.Spider):
     def get_data(self,response):
         db_agent = DatabaseAgent()
         s = IndustrialItem()
-        # s['data'] = response.body.decode("GBK").encode("utf8")
         s['url'] = response.url
         s['title'] = response.xpath('//title/text()').extract()[0]
         s['time'] = response.xpath('//h5/text()').extract()[0]
@@ -79,15 +79,21 @@ class shanghai(scrapy.Spider):
         s['area'] = self.area
         s['origin'] = self.origin
         s['keyword'] = self.key
+        s['title'] = s['title'].replace("安徽省经济和信息化委员会 ","")
         try:
             db_agent.add(
                 kwargs=dict(s),
                 orm_model=Industrial
             )
+            res = True
             logging.info("-----------add success------------")
-        except:
+        except Exception as e:
+            res = False
+            logging.info(e)
             logging.info("-----------add error------------")
             pass
+        # if res:
+        #     data = "".join(list(map(clear,response.xpath('//div[@id="zoom"]//text()').extract())))
+        #     with open('./export/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
+        #         f.write(str(data))
         yield s
-
-
