@@ -94,6 +94,6 @@ class shanghai(scrapy.Spider):
             pass
         # if res:
         #     data = "".join(list(map(clear,response.xpath('//div[@id="zoom"]//text()').extract())))
-        #     with open('./export/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
+        #     with open('./export/anhui/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
         #         f.write(str(data))
         yield s

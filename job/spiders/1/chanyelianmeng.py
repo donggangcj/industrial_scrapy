@@ -79,18 +79,17 @@ class shanghai(scrapy.Spider):
                 logging.info(e)
                 logging.info("-----------add error------------")
                 pass
-            #
-            # data = scrapy.Request(
+
+            # res = scrapy.Request(
             #     url=url,
             #     headers=self.header
             # )
-            # print(data)
-            # data
+            # print(res)
+            # data = res.xpath('//')
             # res = True
             # if res:
             #     with open('./export/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
             #         f.write(str(data))
-            #     yield s
             yield s
 
 
