@@ -1,6 +1,5 @@
 __pycache__\
 *.pyc
 docker-compose.yml
-export/*
 .idea/*
 *~
