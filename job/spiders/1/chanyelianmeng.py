@@ -13,9 +13,11 @@ import time
 import scrapy
 import datetime
 
+from lxml import etree
 from common.dbtools import DatabaseAgent
 from job.items import IndustrialItem
 from job.models.industrial import Industrial
+from common.common import clear
 
 
 class shanghai(scrapy.Spider):
@@ -55,7 +57,6 @@ class shanghai(scrapy.Spider):
         db_agent = DatabaseAgent()
         urls = response.xpath('//ul[@class="download_list"]/li/a/@href').extract()
         for url in urls:
-            print(url)
             url_exits = db_agent.get(
                 orm_model=Industrial,
                 filter_kwargs={"url": url}
@@ -69,7 +70,7 @@ class shanghai(scrapy.Spider):
             s['title'] = response.xpath('//a[@href="{url}"]/h2/text()'.format(url=url)).extract()[0]
             if key == "工业App" and ("工业" not in s['title'] or ("App" not in s['title'] and "APP" not in s[
                 'title'] and "app" not in s['title'])):
-                pass
+                add = False
             else:
                 s['time'] = time.mktime(date.timetuple())
                 s['nature'] = "None"
@@ -83,22 +84,24 @@ class shanghai(scrapy.Spider):
                         orm_model=Industrial
                     )
                     logging.info("-----------add success------------")
+                    add = True
                 except Exception as e:
                     logging.info(e)
                     logging.info("-----------add error------------")
-                    pass
-
-                # res = scrapy.Request(
-                #     url=url,
-                #     headers=self.header
-                # )
-                # print(res)
-                # data = res.xpath('//')
-                # res = True
-                # if res:
-                #     with open('./export/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
-                #         f.write(str(data))
+                    add = False
+            if add:
+                res = requests.get(
+                    url=url,
+                    headers=self.header,
+                )
+                res = res.content
+                selector = etree.HTML(res)
+                data = "".join(list(map(clear,selector.xpath('//div[@class="inside_content_text"]//text()'))))
+                with open('./export/chanyelianmeng/{filename}.html'.format(filename=s['title']), 'w',
+                          encoding=("utf8")) as f:
+                    f.write(str(data))
             yield s
+
 
 
 

@@ -12,10 +12,13 @@ import scrapy
 import datetime
 import time
 import json
+import requests
 
+from lxml import etree
 from common.dbtools import DatabaseAgent
 from job.items import IndustrialItem
 from job.models.industrial import Industrial
+from common.common import clear
 
 
 class jiangsu(scrapy.Spider):
@@ -60,12 +63,8 @@ class jiangsu(scrapy.Spider):
                 orm_model=Industrial,
                 filter_kwargs={"url": item["url"]}
             )
-            # if url_exits:
-            #     logging.info("-----------already exits------------")
-            #     continue
             title = item["name"].replace("<font color='red'>","").replace("</font>","").replace("<nobr>","").replace("</nobr>","")
             if key == "工业App" and ("工业" not in title or ("App" not in title and "APP" not in title and "app" not in title)):
-                print(key)
                 logging.info("-----------工业App not in article------------")
                 continue
             title_exits = db_agent.get(
@@ -89,8 +88,24 @@ class jiangsu(scrapy.Spider):
                     orm_model=Industrial
                 )
                 logging.info("-----------add success------------")
+                add = True
             except:
                 logging.info("-----------add error------------")
-                pass
+                add = False
+
+            if add:
+                res = requests.get(
+                    url=item["url"],
+                    headers=self.header,
+                )
+                res = res.content
+                selector = etree.HTML(res)
+                data = selector.xpath('//div[@class="content"]//text()')
+                if len(data) == 0:
+                    data = selector.xpath('//div[@id="con_con"]//text()')
+                data = "".join(list(map(clear,data)))
+                with open('./export/gongxinbu/{filename}.html'.format(filename=s['title']), 'w',
+                          encoding=("utf8")) as f:
+                    f.write(str(data))
             yield s
 
