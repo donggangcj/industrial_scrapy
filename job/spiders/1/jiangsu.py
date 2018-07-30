@@ -17,17 +17,19 @@ class jiangsu(scrapy.Spider):
                             '3.0.3239.132 Safari/537.36'}
     area = 'jiangsu'
     origin = "jiangsu"
-    key = '工业互联网'
+    keys = ['工业互联网','工业App']
+    key_map = {"工业互联网": "%E5%B7%A5%E4%B8%9A%E4%BA%92%E8%81%94%E7%BD%91", "工业App": "%E5%B7%A5%E4%B8%9AApp"}
 
     def start_requests(self):
-        yield scrapy.Request(
-            url='http://www.jiangsu.gov.cn/jrobot/search.do?webid=23&analyzeType=1&pg=10&p={p}&tpl=2&category=&q=%E5%B7%A5%E4%B8%9A%E4%BA%92%E8%81%94%E7%BD%91&pos=&od=&date=&date='.format(
-                p=1),
-            headers=self.header,
-            callback=self.get_page
-        )
+        for key in self.keys:
+            yield scrapy.Request(
+                url='http://www.jiangsu.gov.cn/jrobot/search.do?webid=23&analyzeType=1&pg=10&p={p}&tpl=2&category=&q={key}&pos=&od=&date=&date='.format(
+                    p=1,key=self.key_map[key]),
+                headers=self.header,
+                callback=lambda response,key=key: self.get_page(response,key)
+            )
 
-    def get_page(self, response):
+    def get_page(self, response, key):
         page = response.xpath('//div[@id="jsearch-info-box"]/@data-total').extract()[0]
         page = int(page) / 10
         if page > int(page):
@@ -36,14 +38,14 @@ class jiangsu(scrapy.Spider):
             p = int(page)
         for x in range(1, p + 1):
             yield scrapy.Request(
-                url='http://www.jiangsu.gov.cn/jrobot/search.do?webid=23&analyzeType=1&pg=10&p={p}&tpl=2&category=&q=%E5%B7%A5%E4%B8%9A%E4%BA%92%E8%81%94%E7%BD%91&pos=&od=&date=&date='.format(
-                    p=x),
+                url='http://www.jiangsu.gov.cn/jrobot/search.do?webid=23&analyzeType=1&pg=10&p={p}&tpl=2&category=&q={key}&pos=&od=&date=&date='.format(
+                    p=x, key=self.key_map[key]),
                 headers=self.header,
-                callback=self.get_url
+                callback=lambda response,key=key: self.get_url(response,key)
             )
 
 
-    def get_url(self,response):
+    def get_url(self,response, key):
         db_agent = DatabaseAgent()
         urls = response.xpath('//div[@class="jsearch-result-url"]/a/text()').extract()
         for url in urls:
@@ -57,29 +59,32 @@ class jiangsu(scrapy.Spider):
             yield scrapy.Request(
                 url=url,
                 headers=self.header,
-                callback=self.get_data
+                callback=lambda response,key=key: self.get_data(response,key)
             )
 
-    def get_data(self,response):
+    def get_data(self,response, key):
         db_agent = DatabaseAgent()
         s = IndustrialItem()
-        # s['data'] = response.body.decode("utf-8")
         s['url'] = response.url
         s['title'] = response.xpath('//title/text()').extract()[0]
-        s['time'] = response.xpath('//meta[@name="PubDate"]/@content').extract()[0]
-        date = datetime.datetime.strptime(s['time'], "%Y-%m-%d %H:%M")
-        s['time'] = time.mktime(date.timetuple())
-        s['nature'] = "None"
-        s['area'] = self.area
-        s['origin'] = self.origin
-        s['keyword'] = self.key
-        try:
-            db_agent.add(
-                kwargs=dict(s),
-                orm_model=Industrial
-            )
-            logging.info("-----------add success------------")
-        except:
-            logging.info("-----------add error------------")
+        if key == "工业App" and ("工业" not in s['title'] or ("App" not in s['title'] and "APP" not in s[
+            'title'] and "app" not in s['title'])):
             pass
+        else:
+            s['time'] = response.xpath('//meta[@name="PubDate"]/@content').extract()[0]
+            date = datetime.datetime.strptime(s['time'], "%Y-%m-%d %H:%M")
+            s['time'] = time.mktime(date.timetuple())
+            s['nature'] = "None"
+            s['area'] = self.area
+            s['origin'] = self.origin
+            s['keyword'] = key
+            try:
+                db_agent.add(
+                    kwargs=dict(s),
+                    orm_model=Industrial
+                )
+                logging.info("-----------add success------------")
+            except:
+                logging.info("-----------add error------------")
+                pass
         yield s

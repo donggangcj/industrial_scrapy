@@ -25,17 +25,18 @@ class jiangsu(scrapy.Spider):
                             '3.0.3239.132 Safari/537.36'}
     area = 'gongxinbu'
     origin = "gongxinbu"
-    key = '工业互联网'
+    keys = ['工业互联网','工业App']
 
     def start_requests(self):
-        yield scrapy.FormRequest(
-            url="http://searchweb.miit.gov.cn/search/search",
-            headers=self.header,
-            formdata={"urls":"http://www.miit.gov.cn/","sortKey":"showTime","sortFlag":"-1","sortType":"1","indexDB":"css","pageSize":"10","pageNow":"1","name":"工业互联网","num":"10","rangeKey":"showTime"},
-            callback=self.get_page
-        )
+        for key in self.keys:
+            yield scrapy.FormRequest(
+                    url="http://searchweb.miit.gov.cn/search/search",
+                    headers=self.header,
+                    formdata={"urls":"http://www.miit.gov.cn/","sortKey":"showTime","sortFlag":"-1","sortType":"1","indexDB":"css","pageSize":"10","pageNow":"1","fullText":key},
+                    callback=lambda response, key=key: self.get_page(response,key)
+                )
 
-    def get_page(self, response):
+    def get_page(self, response, key):
         data = json.loads(response.body)
         page = int(data["total"])/int(data["pageSize"])
         page = int(page+1) if page>int(page) else int(page)
@@ -44,12 +45,12 @@ class jiangsu(scrapy.Spider):
                 url="http://searchweb.miit.gov.cn/search/search",
                 headers=self.header,
                 formdata={"urls": "http://www.miit.gov.cn/", "sortKey": "showTime", "sortFlag": "-1", "sortType": "1",
-                          "indexDB": "css", "pageSize": "10", "pageNow": str(p), "name": "工业互联网", "num": "10",
+                          "indexDB": "css", "pageSize": "10", "pageNow": str(p), "name": key, "num": "10",
                           "rangeKey": "showTime"},
-                callback=self.get_url
+                callback=lambda response, key=key: self.get_url(response,key)
             )
 
-    def get_url(self,response):
+    def get_url(self,response, key):
         data = json.loads(response.body)
         data = data["array"]
         db_agent = DatabaseAgent()
@@ -59,10 +60,14 @@ class jiangsu(scrapy.Spider):
                 orm_model=Industrial,
                 filter_kwargs={"url": item["url"]}
             )
-            if url_exits:
-                logging.info("-----------already exits------------")
-                continue
+            # if url_exits:
+            #     logging.info("-----------already exits------------")
+            #     continue
             title = item["name"].replace("<font color='red'>","").replace("</font>","").replace("<nobr>","").replace("</nobr>","")
+            if key == "工业App" and ("工业" not in title or ("App" not in title and "APP" not in title and "app" not in title)):
+                print(key)
+                logging.info("-----------工业App not in article------------")
+                continue
             title_exits = db_agent.get(
                 orm_model=Industrial,
                 filter_kwargs={"title": title}
@@ -77,11 +82,7 @@ class jiangsu(scrapy.Spider):
             s['time'] = time.mktime(date.timetuple())
             s['origin'] = self.origin
             s['nature'] = "None"
-            s['keyword'] = self.key
-            db_agent.add(
-                kwargs=dict(s),
-                orm_model=Industrial
-            )
+            s['keyword'] = key
             try:
                 db_agent.add(
                     kwargs=dict(s),

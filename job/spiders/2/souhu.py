@@ -26,40 +26,44 @@ class jiangsu(scrapy.Spider):
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
                             '3.0.3239.132 Safari/537.36'}
     area = 'souhu'
-    key = '工业互联网'
+    keys = ['工业互联网','工业App']
 
     def start_requests(self):
         s = IndustrialItem()
         db_agent = DatabaseAgent()
-        for x in range(0,180,10):
-            res = requests.post(
-                url="http://search.sohu.com/outer/search/news",
-                headers=self.header,
-                data={"keyword":"工业互联网","size":"10","from":str(x),"city":"上海市","SUV":"1802211642505755","terminalType":"pc","source":"direct","queryType":"edit"}
-            )
-            res = json.loads(res.content.decode("utf8"))
-            if res.get("data",None) == None:
-                break
-            for new in res["data"]["news"]:
-                if not is_exits(new["title"],new["url"]):
-                    continue
-                s["title"] = new["title"]
-                s["url"] = new["url"]
-                s["area"] = self.area
-                s["origin"] = new["authorName"]
-                s["nature"] = None
-                s["time"] = self.get_time(new["url"])
-                s['keyword'] = self.key
-                print(s)
-                try:
-                    db_agent.add(
-                        kwargs=dict(s),
-                        orm_model=Industrial
-                    )
-                    logging.info("-----------add success------------")
-                except:
-                    logging.info("-----------add error------------")
-                    pass
+        for key in self.keys:
+            for x in range(0,180,10):
+                res = requests.post(
+                    url="http://search.sohu.com/outer/search/news",
+                    headers=self.header,
+                    data={"keyword":key,"size":"10","from":str(x),"city":"上海市","SUV":"1802211642505755","terminalType":"pc","source":"direct","queryType":"edit"}
+                )
+                res = json.loads(res.content.decode("utf8"))
+                if res.get("data",None) == None:
+                    break
+                for new in res["data"]["news"]:
+                    if not is_exits(new["title"],new["url"]):
+                        continue
+                    s["title"] = new["title"]
+                    if key == "工业App" and ("工业" not in s['title'] or ("App" not in s['title'] and "APP" not in s[
+                        'title'] and "app" not in s['title'])):
+                        continue
+                    s["url"] = new["url"]
+                    s["area"] = self.area
+                    s["origin"] = new["authorName"]
+                    s["nature"] = None
+                    s["time"] = self.get_time(new["url"])
+                    s['keyword'] = key
+                    print(s)
+                    try:
+                        db_agent.add(
+                            kwargs=dict(s),
+                            orm_model=Industrial
+                        )
+                        logging.info("-----------add success------------")
+                    except:
+                        logging.info("-----------add error------------")
+                        pass
                 # yield s
 
     def get_time(self,url):

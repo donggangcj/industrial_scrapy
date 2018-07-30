@@ -24,32 +24,38 @@ class shanghai(scrapy.Spider):
     area = "chanyelianmeng"
     origin = "chanyelianmeng"
     url = 'http://www.aii-alliance.org/index.php?m=content&c=search&a=search&page={p}'
-    key = '工业互联网'
+    keys = ['工业互联网','工业App']
 
     def start_requests(self):
-        yield scrapy.FormRequest(
-            url=self.url.format(p="1"),
-            headers=self.header,
-            formdata={"search": "工业互联网"},
-            callback=self.get_page
-        )
+        for key in self.keys:
+            yield scrapy.FormRequest(
+                url=self.url.format(p="1"),
+                headers=self.header,
+                formdata={"search": key},
+                callback=lambda response, key=key: self.get_page(response,key)
+            )
 
-    def get_page(self,response):
-        p = int(response.xpath('//div[@id="pages"]/a[last()-1]/text()').extract()[0])
+    def get_page(self,response, key):
+        try:
+            p = int(response.xpath('//div[@id="pages"]/a[last()-1]/text()').extract()[0])
+        except:
+            p = 1
         for x in range(1,p+1):
-            yield scrapy.Request(
+            yield scrapy.FormRequest(
                 dont_filter=True,
                 url=self.url.format(p=x),
                 headers=self.header,
-                callback=self.get_url
+                formdata={"search": key},
+                callback=lambda response, key=key: self.get_url(response,key)
             )
 
 
-    def get_url(self,response):
+    def get_url(self,response, key):
         s = IndustrialItem()
         db_agent = DatabaseAgent()
         urls = response.xpath('//ul[@class="download_list"]/li/a/@href').extract()
         for url in urls:
+            print(url)
             url_exits = db_agent.get(
                 orm_model=Industrial,
                 filter_kwargs={"url": url}
@@ -61,35 +67,37 @@ class shanghai(scrapy.Spider):
             date = date.replace(' ', '')
             date = datetime.datetime.strptime(date, "%Y.%m.%d")
             s['title'] = response.xpath('//a[@href="{url}"]/h2/text()'.format(url=url)).extract()[0]
-            s['time'] = time.mktime(date.timetuple())
-            s['nature'] = "None"
-            s['area'] = self.area
-            s['origin'] = self.origin
-            s['url'] = url
-            s['keyword'] = self.key
-            try:
-                res = True
-                db_agent.add(
-                    kwargs=dict(s),
-                    orm_model=Industrial
-                )
-                logging.info("-----------add success------------")
-            except Exception as e:
-                res = False
-                logging.info(e)
-                logging.info("-----------add error------------")
+            if key == "工业App" and ("工业" not in s['title'] or ("App" not in s['title'] and "APP" not in s[
+                'title'] and "app" not in s['title'])):
                 pass
+            else:
+                s['time'] = time.mktime(date.timetuple())
+                s['nature'] = "None"
+                s['area'] = self.area
+                s['origin'] = self.origin
+                s['url'] = url
+                s['keyword'] = key
+                try:
+                    db_agent.add(
+                        kwargs=dict(s),
+                        orm_model=Industrial
+                    )
+                    logging.info("-----------add success------------")
+                except Exception as e:
+                    logging.info(e)
+                    logging.info("-----------add error------------")
+                    pass
 
-            # res = scrapy.Request(
-            #     url=url,
-            #     headers=self.header
-            # )
-            # print(res)
-            # data = res.xpath('//')
-            # res = True
-            # if res:
-            #     with open('./export/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
-            #         f.write(str(data))
+                # res = scrapy.Request(
+                #     url=url,
+                #     headers=self.header
+                # )
+                # print(res)
+                # data = res.xpath('//')
+                # res = True
+                # if res:
+                #     with open('./export/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
+                #         f.write(str(data))
             yield s
 
 
