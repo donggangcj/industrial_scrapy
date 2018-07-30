@@ -1,4 +1,4 @@
-FROM python:3.6.0
+FROM daocloud.io/library/python:3.6.2rc1-alpine
 
 RUN apt-get update && apt-get -y install vim && rm -rf /var/lib/apt/lists/*
 
