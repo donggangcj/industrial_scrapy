@@ -93,19 +93,19 @@ class jiangsu(scrapy.Spider):
                 logging.info("-----------add error------------")
                 add = False
 
-            if add:
-                res = requests.get(
-                    url=item["url"],
-                    headers=self.header,
-                )
-                res = res.content
-                selector = etree.HTML(res)
-                data = selector.xpath('//div[@class="content"]//text()')
-                if len(data) == 0:
-                    data = selector.xpath('//div[@id="con_con"]//text()')
-                data = "".join(list(map(clear,data)))
-                with open('./export/gongxinbu/{filename}.html'.format(filename=s['title']), 'w',
-                          encoding=("utf8")) as f:
-                    f.write(str(data))
+            # if add:
+            #     res = requests.get(
+            #         url=item["url"],
+            #         headers=self.header,
+            #     )
+            #     res = res.content
+            #     selector = etree.HTML(res)
+            #     data = selector.xpath('//div[@class="content"]//text()')
+            #     if len(data) == 0:
+            #         data = selector.xpath('//div[@id="con_con"]//text()')
+            #     data = "".join(list(map(clear,data)))
+            #     with open('./export/gongxinbu/{filename}.html'.format(filename=s['title']), 'w',
+            #               encoding=("utf8")) as f:
+            #         f.write(str(data))
             yield s
 

@@ -8,6 +8,7 @@ import time
 from common.dbtools import DatabaseAgent
 from job.items import IndustrialItem
 from job.models.industrial import Industrial
+from common.common import clear
 
 
 class jiangsu(scrapy.Spider):
@@ -84,6 +85,10 @@ class jiangsu(scrapy.Spider):
                     orm_model=Industrial
                 )
                 logging.info("-----------add success------------")
+                # TODO
+                # data = "".join(list(map(clear,response.xpath('//div[@id="zoom"]//text()').extract())))
+                # with open('./export/anhui/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
+                #     f.write(str(data))
             except:
                 logging.info("-----------add error------------")
                 pass

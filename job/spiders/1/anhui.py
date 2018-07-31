@@ -91,9 +91,9 @@ class shanghai(scrapy.Spider):
                     orm_model=Industrial
                 )
                 logging.info("-----------add success------------")
-                data = "".join(list(map(clear,response.xpath('//div[@id="zoom"]//text()').extract())))
-                with open('./export/anhui/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
-                    f.write(str(data))
+                # data = "".join(list(map(clear,response.xpath('//div[@id="zoom"]//text()').extract())))
+                # with open('./export/anhui/{filename}.html'.format(filename=s['title']), 'w', encoding=("utf8")) as f:
+                #     f.write(str(data))
         except Exception as e:
             logging.info(e)
             logging.info("-----------add error------------")

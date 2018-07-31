@@ -89,17 +89,17 @@ class shanghai(scrapy.Spider):
                     logging.info(e)
                     logging.info("-----------add error------------")
                     add = False
-            if add:
-                res = requests.get(
-                    url=url,
-                    headers=self.header,
-                )
-                res = res.content
-                selector = etree.HTML(res)
-                data = "".join(list(map(clear,selector.xpath('//div[@class="inside_content_text"]//text()'))))
-                with open('./export/chanyelianmeng/{filename}.html'.format(filename=s['title']), 'w',
-                          encoding=("utf8")) as f:
-                    f.write(str(data))
+            # if add:
+            #     res = requests.get(
+            #         url=url,
+            #         headers=self.header,
+            #     )
+            #     res = res.content
+            #     selector = etree.HTML(res)
+            #     data = "".join(list(map(clear,selector.xpath('//div[@class="inside_content_text"]//text()'))))
+            #     with open('./export/chanyelianmeng/{filename}.html'.format(filename=s['title']), 'w',
+            #               encoding=("utf8")) as f:
+            #         f.write(str(data))
             yield s
 
 
