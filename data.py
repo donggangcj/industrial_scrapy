@@ -21,7 +21,8 @@ process = CrawlerProcess(get_project_settings())
 # process.crawl('gongxinbu')
 # process.crawl('souhu')
 # process.crawl('shandong')
-process.crawl('zaoqizhineng')
+# process.crawl('zaoqizhineng')
+process.crawl('huodongxing')
 
 
 
