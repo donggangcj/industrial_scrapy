@@ -17,7 +17,7 @@ from job.items import IndustrialItem
 from job.models.industrial import Industrial
 
 
-class shanghai(scrapy.Spider):
+class zhejiang(scrapy.Spider):
     name = 'zhejiang'
     header = {'Cache-Control': 'max-age=0', 'Origin': 'http://www.sheitc.gov.cn', 'Upgrade-Insecure-Requests': '1',
               'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',

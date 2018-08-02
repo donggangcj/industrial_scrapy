@@ -13,14 +13,16 @@ from scrapy.utils.project import get_project_settings
 KEY = os.getenv("KEY", None)
 
 process = CrawlerProcess(get_project_settings())
-process.crawl('shanghai')
-process.crawl('anhui')
-process.crawl('jiangsu')
-process.crawl('chanyelianmeng')
-process.crawl('zhejiang')
-process.crawl('gongxinbu')
-process.crawl('souhu')
-process.crawl('shandong')
+# process.crawl('shanghai')
+# process.crawl('anhui')
+# process.crawl('jiangsu')
+# process.crawl('chanyelianmeng')
+# process.crawl('zhejiang')
+# process.crawl('gongxinbu')
+# process.crawl('souhu')
+# process.crawl('shandong')
+process.crawl('zaoqizhineng')
+
 
 
 process.start()

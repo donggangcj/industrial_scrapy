@@ -20,7 +20,7 @@ from job.items import IndustrialItem
 from job.models.industrial import Industrial
 
 
-class jiangsu(scrapy.Spider):
+class souhu(scrapy.Spider):
     name = 'souhu'
     header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'

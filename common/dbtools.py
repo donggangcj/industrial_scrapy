@@ -7,10 +7,10 @@ from sqlalchemy.orm import sessionmaker
 from job.models.base import Base
 
 MYSQL_HOST = os.getenv("MYSQL_HOST", "117.50.19.70")
-MYSQL_DBNAME = os.getenv("MYSQL_DBNAME", "industrial_internet")
+MYSQL_DBNAME = os.getenv("MYSQL_DBNAME", "industrial-internet")
 MYSQL_USER = os.getenv("MYSQL_USER", "root")
 MYSQL_PASSWD = os.getenv("MYSQL_PASSWD", "root")
-MYSQL_PORT = os.getenv("MYSQL_PORT", 30306)
+MYSQL_PORT = os.getenv("MYSQL_PORT", 30071)
 
 DATABASE_URL = "mysql+pymysql://{}:{}@{}:{}/{}".format(MYSQL_USER,
                                                        MYSQL_PASSWD,
