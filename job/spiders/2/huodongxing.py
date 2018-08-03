@@ -49,7 +49,7 @@ class huodongxing(scrapy.Spider):
             s['url'] = response.xpath('//div[@class="search-tab-content-list"]/div[@class="search-tab-content-item flex"][{x}]/a[1]/@href'.format(x=item)).extract()[0]
             s['url'] = 'http://www.huodongxing.com' + s['url']
             s['area'] = self.area
-            s['keyword'] = key
+            s['keyword'] = "工业互联网活动"
             s['nature'] = "活动"
             s['origin'] = self.origin
             s['time'] = response.xpath('//div[@class="search-tab-content-list"]/div[@class="search-tab-content-item flex"][{x}]/div[@class="search-tab-content-item-right"]/p[@class="item-data flex"]/text()'.format(x=item)).extract()[0].split('-')[0]
