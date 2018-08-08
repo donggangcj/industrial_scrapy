@@ -54,7 +54,7 @@ class beijing(scrapy.Spider):
         for index in range(1,21):
             print(index)
             s['url'] = response.xpath('//ul[last()]/li[{index}]/dl[@class="result_text"]/dt/a/@href'.format(index=index)).extract()
-            s['title'] = response.xpath('//ul[last()]/li[{index}]/dl[@class="result_text"]/dt/a/i//text()'.format(index=index)).extract()[0]
+            s['title'] = response.xpath('//ul[last()]/li[{index}]/dl[@class="result_text"]/dt/a/i//text()'.format(index=index)).extract()
             s['title'] = ''.join(s['title'])
             if not is_exits(s["title"], s["url"]):
                 continue
