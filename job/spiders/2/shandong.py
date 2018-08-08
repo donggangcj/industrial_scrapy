@@ -17,6 +17,7 @@ import json
 from common.dbtools import DatabaseAgent
 from job.items import IndustrialItem
 from job.models.industrial import Industrial
+from common.common import is_exits
 
 
 class shandong(scrapy.Spider):
@@ -76,14 +77,15 @@ class shandong(scrapy.Spider):
             s['keyword'] = key
             s['url'] = data['PUBURL']
             s['nature'] = data['CHANNELNAME']
-            try:
-                db_agent.add(
-                    kwargs=dict(s),
-                    orm_model=Industrial
-                )
-                logging.info("-----------add success------------")
-            except Exception as e:
-                logging.info(e)
-                logging.info("-----------add error------------")
-                pass
+            if is_exits(s["title"], s["url"]):
+                try:
+                    db_agent.add(
+                        kwargs=dict(s),
+                        orm_model=Industrial
+                    )
+                    logging.info("-----------add success------------")
+                except Exception as e:
+                    logging.info(e)
+                    logging.info("-----------add error------------")
+                    pass
         yield s
