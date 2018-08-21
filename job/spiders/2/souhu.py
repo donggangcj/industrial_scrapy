@@ -26,7 +26,7 @@ class souhu(scrapy.Spider):
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
                             '3.0.3239.132 Safari/537.36'}
     area = 'souhu'
-    keys = ['工业互联网','工业App',"航天云网","根云","用友工业互联网","beacon","isesol"]
+    keys = ["isesol","beacon","用友工业互联网","根云","航天云网",'工业互联网','工业App']
 
     def start_requests(self):
         s = IndustrialItem()
@@ -52,7 +52,10 @@ class souhu(scrapy.Spider):
                     s["area"] = self.area
                     s["origin"] = new["authorName"]
                     s["nature"] = None
-                    s["time"] = self.get_time(new["url"])
+                    try:
+                        s["time"] = self.get_time(new["url"])
+                    except:
+                        pass
                     s['keyword'] = key
                     print(s)
                     try:
