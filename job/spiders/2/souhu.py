@@ -45,8 +45,9 @@ class souhu(scrapy.Spider):
                     if not is_exits(new["title"],new["url"]):
                         continue
                     s["title"] = new["title"]
-                    if key == "工业App" and ("工业" not in s['title'] or ("App" not in s['title'] and "APP" not in s[
-                        'title'] and "app" not in s['title'])):
+                    if key == "工业App" and ("工业" not in s['title'] or "app" not in s['title'].lower ):
+                        continue
+                    if key in ["isesol","beacon","用友工业互联网","根云","航天云网","工业app"] and (key not in s['title'].lower ):
                         continue
                     s["url"] = new["url"]
                     s["area"] = self.area
@@ -55,7 +56,7 @@ class souhu(scrapy.Spider):
                     try:
                         s["time"] = self.get_time(new["url"])
                     except:
-                        pass
+                        continue
                     s['keyword'] = key
                     print(s)
                     try:
