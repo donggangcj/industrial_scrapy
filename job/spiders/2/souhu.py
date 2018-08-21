@@ -47,7 +47,7 @@ class souhu(scrapy.Spider):
                     s["title"] = new["title"]
                     if key == "工业App" and ("工业" not in s['title'] or "app" not in s['title'].lower ):
                         continue
-                    if key in ["isesol","beacon","用友工业互联网","根云","航天云网","工业app"] and (key not in s['title'].lower ):
+                    if key in ["isesol","beacon","用友工业互联网","根云","航天云网","工业App"] and (key.lower() not in s['title'].lower() ):
                         continue
                     s["url"] = new["url"]
                     s["area"] = self.area
