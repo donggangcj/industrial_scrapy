@@ -26,7 +26,7 @@ class souhu(scrapy.Spider):
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
                             '3.0.3239.132 Safari/537.36'}
     area = 'souhu'
-    keys = ["isesol","beacon","用友工业互联网","根云","航天云网",'工业互联网','工业App']
+    keys = ["isesol","富士康beacon","用友工业互联网","根云","航天云网",'工业互联网','工业App']
 
     def start_requests(self):
         s = IndustrialItem()
