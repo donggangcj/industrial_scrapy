@@ -6,7 +6,7 @@ WORKDIR /home/app
 
 ENV PYTHONPATH=/home/app MYSQL_HOST="117.50.19.70" \
     MYSQL_DBNAME="industrial_internet" MYSQL_USER="root" \
-    MYSQL_PASSWD="root" MYSQL_PORT="30306"
+    MYSQL_PASSWD="root" MYSQL_PORT="31264"
 
 
 COPY . /home/app/
